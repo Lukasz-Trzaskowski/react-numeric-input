@@ -313,11 +313,13 @@ module.exports =
 				}, {
 					key: "_step",
 					value: function _step(n, callback) {
-						var _n = this._toNumber((this.state.value || 0) + this.props.step * n);
-						if (_n !== this.state.value) {
-							this.setState({
-								value: _n
-							}, callback);
+						if(!this.props.readOnly){
+							var _n = this._toNumber((this.state.value || 0) + this.props.step * n);
+							if (_n !== this.state.value) {
+								this.setState({
+									value: _n
+								}, callback);
+							}
 						}
 					}
 				}, {
@@ -392,29 +394,33 @@ module.exports =
 				}, {
 					key: "increase",
 					value: function increase(_recursive, callback) {
-						var _this4 = this;
-						this.stop();
-						this._step(1, callback);
-						if (isNaN(this.state.value) || this.state.value < this.props.max) {
-							this._timer = setTimeout(function() {
-								_this4.increase(true);
-							}, _recursive
-								? NumericInput.SPEED
-								: NumericInput.DELAY);
+						if(!this.props.readOnly){
+							var _this4 = this;
+							this.stop();
+							this._step(1, callback);
+							if (isNaN(this.state.value) || this.state.value < this.props.max) {
+								this._timer = setTimeout(function() {
+									_this4.increase(true);
+								}, _recursive
+									? NumericInput.SPEED
+									: NumericInput.DELAY);
+							}
 						}
 					}
 				}, {
 					key: "decrease",
 					value: function decrease(_recursive, callback) {
-						var _this5 = this;
-						this.stop();
-						this._step(-1, callback);
-						if (isNaN(this.state.value) || this.state.value > this.props.min) {
-							this._timer = setTimeout(function() {
-								_this5.decrease(true);
-							}, _recursive
-								? NumericInput.SPEED
-								: NumericInput.DELAY);
+						if(!this.props.readOnly){
+							var _this5 = this;
+							this.stop();
+							this._step(-1, callback);
+							if (isNaN(this.state.value) || this.state.value > this.props.min) {
+								this._timer = setTimeout(function() {
+									_this5.decrease(true);
+								}, _recursive
+									? NumericInput.SPEED
+									: NumericInput.DELAY);
+							}
 						}
 					}
 				}, {
@@ -860,4 +866,3 @@ module.exports =
 	}
 	/******/
 ]);
-
