@@ -116,41 +116,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * step timer. Then define all the private methods within the constructor.
 	     */
 
-	    /**
-	     * The state of the component
-	     * @type {Object}
-	     */
-
-	    /**
-	     * The step timer
-	     * @type {Number}
-	     */
 
 	    /**
 	     * When click and hold on a button - the speed of auto changin the value.
 	     * This is a static property and can be modified if needed.
 	     */
 
+
 	    /**
 	     * The deault behaviour is to start from 0, use step of 1 and display
 	     * integers
 	     */
-
-	    function NumericInput() {
-	        var _Object$getPrototypeO;
-
+	    function NumericInput(props) {
 	        _classCallCheck(this, NumericInput);
 
-	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	            args[_key] = arguments[_key];
-	        }
+	        var _this = _possibleConstructorReturn(this, (NumericInput.__proto__ || Object.getPrototypeOf(NumericInput)).call(this, props));
 
-	        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(NumericInput)).call.apply(_Object$getPrototypeO, [this].concat(args)));
+	        _this._timer = null;
+	        _this._valid = undefined;
 
 	        _this.state = {
 	            selectionStart: null,
 	            selectionEnd: null,
-	            value: "value" in _this.props ? _this.props.value : _this.props.defaultValue,
+	            value: "value" in props ? props.value : props.defaultValue,
 	            btnDownHover: false,
 	            btnDownActive: false,
 	            btnUpHover: false,
@@ -172,29 +160,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *     3. Then parse it to number (delegating to this.props.parse if any)
 	     */
 
-	    /**
-	     * The stop method (need to declare it here to use it in the constructor)
-	     * @type {Function}
-	     */
-
-	    /**
-	     * This holds the last known validation error. We need to compare that with
-	     * new errors and detect validation changes...
-	     * @type {[type]}
-	     */
 
 	    /**
 	     * When click and hold on a button - the delay before auto changin the value.
 	     * This is a static property and can be modified if needed.
 	     */
-	    //,
-	    // noValidate: false
+
 
 	    /**
 	     * This are the default styles that act as base for all the component
 	     * instances. One can modify this object to change the default styles
 	     * of all the widgets on the page.
 	     */
+
 
 	    _createClass(NumericInput, [{
 	        key: "componentWillReceiveProps",
@@ -288,7 +266,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "checkValidity",
 	        value: function checkValidity() {
-	            var valid = undefined,
+	            var valid = void 0,
 	                validationError = "";
 
 	            var supportsValidation = !!this.refs.input.checkValidity;
@@ -418,10 +396,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            if (_n !== this.state.value) {
 	                this.setState({ value: _n }, callback);
-	                return true;
 	            }
-
-	            return false;
 	        }
 
 	        /**
@@ -445,8 +420,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "_onKeyDown",
 	        value: function _onKeyDown() {
-	            for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-	                args[_key2] = arguments[_key2];
+	            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	                args[_key] = arguments[_key];
 	            }
 
 	            args[0].persist();
@@ -483,11 +458,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            _this3.props.onSelect.call(_this3.refs.input, e);
 	                        }
 	                        break;
-	                    case "selectstart":
-	                        if (_this3.props.onSelectStart) {
-	                            _this3.props.onSelectStart.call(_this3.refs.input, e);
-	                        }
-	                        break;
+	                    // case "selectstart":
+	                    //     if (this.props.onSelectStart) {
+	                    //         this.props.onSelectStart.call(this.refs.input, e)
+	                    //     }
+	                    //     break;
 	                }
 	            });
 	        }
@@ -515,12 +490,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    }, {
 	        key: "increase",
-	        value: function increase() {
+	        value: function increase(_recursive, callback) {
 	            var _this4 = this;
-
-	            var _recursive = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
-
-	            var callback = arguments[1];
 
 	            this.stop();
 	            this._step(1, callback);
@@ -542,12 +513,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    }, {
 	        key: "decrease",
-	        value: function decrease() {
+	        value: function decrease(_recursive, callback) {
 	            var _this5 = this;
-
-	            var _recursive = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
-
-	            var callback = arguments[1];
 
 	            this.stop();
 	            this._step(-1, callback);
@@ -597,8 +564,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (typeof this.props[callbackName] == "function") {
 	                var _props$callbackName;
 
-	                for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-	                    args[_key3 - 1] = arguments[_key3];
+	                for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	                    args[_key2 - 1] = arguments[_key2];
 	                }
 
 	                (_props$callbackName = this.props[callbackName]).call.apply(_props$callbackName, [null].concat(args));
@@ -619,26 +586,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var state = this.state;
 	            var css = {};
 
-	            var _props = this.props;
-	            var
-	            // These are ignored in rendering
-	            step = _props.step;
-	            var min = _props.min;
-	            var max = _props.max;
-	            var precision = _props.precision;
-	            var parse = _props.parse;
-	            var format = _props.format;
-	            var mobile = _props.mobile;
-	            var value = _props.value;
-	            var type = _props.type;
-	            var style = _props.style;
-	            var defaultValue = _props.defaultValue;
-	            var onInvalid = _props.onInvalid;
-	            var onValid = _props.onValid;
-
-	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "mobile", "value", "type", "style", "defaultValue", "onInvalid", "onValid"]);
+	            var _props = this.props,
+	                step = _props.step,
+	                min = _props.min,
+	                max = _props.max,
+	                precision = _props.precision,
+	                parse = _props.parse,
+	                format = _props.format,
+	                mobile = _props.mobile,
+	                value = _props.value,
+	                type = _props.type,
+	                style = _props.style,
+	                defaultValue = _props.defaultValue,
+	                onInvalid = _props.onInvalid,
+	                onValid = _props.onValid,
+	                rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "mobile", "value", "type", "style", "defaultValue", "onInvalid", "onValid"]);
 
 	            // Build the styles
+
 
 	            for (var x in NumericInput.style) {
 	                css[x] = _extends({}, NumericInput.style[x], style ? style[x] || {} : {});
@@ -659,9 +624,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                wrap: {
 	                    style: style === false ? null : css.wrap,
 	                    className: 'react-numeric-input',
-	                    ref: 'wrapper',
-	                    onMouseUp: undefined,
-	                    onMouseLeave: undefined
+	                    ref: 'wrapper'
 	                },
 	                input: _extends({
 	                    ref: 'input',
@@ -669,21 +632,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    style: style === false ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
-	                    onMouseEnter: undefined,
-	                    onMouseDown: undefined,
-	                    onMouseUp: undefined,
-	                    onMouseLeave: undefined,
-	                    onTouchStart: undefined,
-	                    onTouchEnd: undefined,
 	                    style: style === false ? null : _extends({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
 	                },
 	                btnDown: {
-	                    onMouseEnter: undefined,
-	                    onMouseDown: undefined,
-	                    onMouseUp: undefined,
-	                    onMouseLeave: undefined,
-	                    onTouchStart: undefined,
-	                    onTouchEnd: undefined,
 	                    style: style === false ? null : _extends({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
 	                }
 	            };
@@ -734,8 +685,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        });
 	                    },
 	                    onMouseDown: function onMouseDown() {
-	                        for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-	                            args[_key4] = arguments[_key4];
+	                        for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+	                            args[_key3] = arguments[_key3];
 	                        }
 
 	                        args[0].preventDefault();
@@ -773,8 +724,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        });
 	                    },
 	                    onMouseDown: function onMouseDown() {
-	                        for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-	                            args[_key5] = arguments[_key5];
+	                        for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+	                            args[_key4] = arguments[_key4];
 	                        }
 
 	                        args[0].preventDefault();
@@ -795,10 +746,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onInput: this._onSelectionChange.bind(this),
 	                    onSelect: this._onSelectionChange.bind(this),
-	                    onSelectStart: this._onSelectionChange.bind(this),
+	                    // onSelectStart: this._onSelectionChange.bind(this),
 	                    onFocus: function onFocus() {
-	                        for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-	                            args[_key6] = arguments[_key6];
+	                        for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+	                            args[_key5] = arguments[_key5];
 	                        }
 
 	                        args[0].persist();
@@ -807,8 +758,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        });
 	                    },
 	                    onBlur: function onBlur() {
-	                        for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
-	                            args[_key7] = arguments[_key7];
+	                        for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+	                            args[_key6] = arguments[_key6];
 	                        }
 
 	                        args[0].persist();
@@ -887,7 +838,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    onValid: PropTypes.func,
 	    onInput: PropTypes.func,
 	    onSelect: PropTypes.func,
-	    onSelectStart: PropTypes.func,
+	    // onSelectStart: PropTypes.func,
 	    size: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	    defaultValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -908,7 +859,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    format: null,
 	    // className : '',
 	    mobile: 'auto',
-	    style: {} };
+	    style: {} //,
+	    // noValidate: false
+	};
 	NumericInput.style = {
 
 	    // The wrapper (span)
@@ -1062,6 +1015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	NumericInput.SPEED = 50;
 	NumericInput.DELAY = 500;
+
 
 	module.exports = NumericInput;
 
