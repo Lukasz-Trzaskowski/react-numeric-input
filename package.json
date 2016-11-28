@@ -1,5 +1,5 @@
 {
-  "name": "react-numeric-input-with-ie-support",
+  "name": "react-numeric-input-with-ie-support-lukasz",
   "version": "2.0.5",
   "description": "Number input component that can replace the native number input which is not yet very well supported and where it is, it does not have the same appearance across the browsers. Additionally this component offers more flexible options and can be used for any values (differently formatted representations of the internal numeric value). Fixed Read only issue also.",
   "main": "index.js",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Girish-K/react-numeric-input.git"
+    "url": "https://github.com/Lukasz-Trzaskowski/react-numeric-input"
   },
   "keywords": [
     "react",
@@ -26,9 +26,9 @@
   ],
   "author": "Girish",
   "bugs": {
-    "url": "https://github.com/Girish-K/react-numeric-input/issues"
+    "url": "https://github.com/Lukasz-Trzaskowski/react-numeric-input/issues"
   },
-  "homepage": "https://github.com/Girish-K/react-numeric-input#readme",
+  "homepage": "https://github.com/Lukasz-Trzaskowski/react-numeric-input#readme",
   "devDependencies": {
     "babel": "^6.3.26",
     "babel-core": "^6.4.5",
