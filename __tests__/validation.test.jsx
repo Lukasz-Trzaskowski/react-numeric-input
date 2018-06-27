@@ -1,8 +1,8 @@
 /* global describe, it */
-import expect       from 'expect'
-import NumericInput from '../src/NumericInput.jsx'
-import React        from 'react'
-import TestUtils    from 'react-addons-test-utils'
+import expect         from 'expect'
+import NumericInput   from '../src/NumericInput.jsx'
+import React          from 'react'
+import ReactTestUtils from 'react-dom/test-utils';
 
 const INVALID_CLASS = "has-error"
 
@@ -12,12 +12,13 @@ class Wrapper extends React.Component
     {
         super(...args)
         this.state = this.props
+        this.numericInput = undefined;
     }
 
     render()
     {
         return (
-            <NumericInput { ...this.state } ref="NumericInput" />
+            <NumericInput {...this.state} ref={inst => this.numericInput = inst} />
         )
     }
 }
@@ -31,7 +32,7 @@ describe('NumericInput', function() {
             onInvalidCalled = true
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput noValidate required onInvalid={ testInvalidEvent } />
         )
 
@@ -43,7 +44,7 @@ describe('NumericInput', function() {
             ).toEqual(false)
 
             expect(
-                widget.refs.wrapper.className.indexOf(INVALID_CLASS),
+                widget.wrapper.className.indexOf(INVALID_CLASS),
                 "Must not have the '" + INVALID_CLASS + "' class"
             ).toEqual(-1)
 
@@ -58,20 +59,20 @@ describe('NumericInput', function() {
             onInvalidCalled = true
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput required onInvalid={ testInvalidEvent }/>
         )
 
         setTimeout(() => {
-            expect(widget.refs.input.required).toEqual(true, "Must be required")
-            expect(widget.refs.input.validity.valid).toEqual(false, "Must not be valid")
-            expect(widget.refs.input.value).toEqual("", "Must have empty value")
+            expect(widget.input.required).toEqual(true, "Must be required")
+            expect(widget.input.validity.valid).toEqual(false, "Must not be valid")
+            expect(widget.input.value).toEqual("", "Must have empty value")
             expect(onInvalidCalled).toEqual(
                 true,
                 "Must call the onInvalid callback"
             )
             expect(
-                widget.refs.wrapper.className.indexOf(INVALID_CLASS),
+                widget.wrapper.className.indexOf(INVALID_CLASS),
                 "Must have the '" + INVALID_CLASS + "' class"
             ).toNotEqual(-1)
             done()
@@ -85,13 +86,13 @@ describe('NumericInput', function() {
             onInvalidCalled = true
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput maxLength={2} value={1234} onInvalid={ testInvalidEvent } />
         )
 
         setTimeout(() => {
-            expect(widget.refs.input.value).toEqual('1234')
-            expect(widget.refs.wrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
+            expect(widget.input.value).toEqual('1234')
+            expect(widget.wrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
             expect(onInvalidCalled).toEqual(
                 true,
                 "Must trigger 'invalid' if the initial value is longer than the maxLength"
@@ -107,12 +108,12 @@ describe('NumericInput', function() {
             onInvalidCalled = true
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput pattern="\\d+" value={12.34} precision={2} onInvalid={ testInvalidEvent } />
         )
 
         setTimeout(() => {
-            expect(widget.refs.wrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
+            expect(widget.wrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
             expect(onInvalidCalled).toEqual(true)
             done()
         }, 50)
@@ -125,12 +126,12 @@ describe('NumericInput', function() {
             onInvalidCalled = true
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput pattern="12.34" value={12.34} precision={2} onInvalid={ testInvalidEvent } />
         )
 
         setTimeout(() => {
-            expect(widget.refs.wrapper.className.indexOf(INVALID_CLASS)).toEqual(-1)
+            expect(widget.wrapper.className.indexOf(INVALID_CLASS)).toEqual(-1)
             expect(onInvalidCalled).toEqual(false)
             done()
         }, 50)
@@ -145,16 +146,16 @@ describe('NumericInput', function() {
             validationError = msg
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput pattern="\\d+" value={12.34} precision={2} onInvalid={ testInvalidEvent } />
         )
 
-        widget.refs.input.value = "abc"
-        widget.refs.input.setCustomValidity("This is a test")
-        TestUtils.Simulate.change(widget.refs.input)
+        widget.input.value = "abc"
+        widget.input.setCustomValidity("This is a test")
+        ReactTestUtils.Simulate.change(widget.input)
 
         setTimeout(() => {
-            expect(widget.refs.wrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
+            expect(widget.wrapper.className.indexOf(INVALID_CLASS)).toNotEqual(-1)
             expect(onInvalidCalled).toEqual(true)
             expect(validationError).toEqual("This is a test")
             done()
@@ -163,24 +164,24 @@ describe('NumericInput', function() {
 
     it('does not call onValid multiple times in sequence', (done) => {
         let _called = 0
-        let widget = TestUtils.renderIntoDocument(<Wrapper onValid={ () => _called += 1 }/>)
+        let widget = ReactTestUtils.renderIntoDocument(<Wrapper onValid={ () => _called += 1 }/>)
 
         expect(_called).toEqual(1, "Must call the onValid callback when the initial render produces valid value")
 
         widget.setState({ value: 5 })
-        expect(widget.refs.NumericInput.refs.input.value).toEqual('5')
+        expect(widget.numericInput.input.value).toEqual('5')
         expect(_called).toEqual(1, "Must not call the onValid callback after setting valid value")
 
         widget.setState({ maxLength: 5 })
-        expect(widget.refs.NumericInput.refs.input.maxLength).toEqual(5)
+        expect(widget.numericInput.input.maxLength).toEqual(5)
         expect(_called).toEqual(1, "Must not call the onValid callback after setting big enough maxLength")
 
         widget.setState({ required: true })
-        expect(widget.refs.NumericInput.refs.input.required).toEqual(true)
+        expect(widget.numericInput.input.required).toEqual(true)
         expect(_called).toEqual(1, "Must not call the onValid callback after setting required to true while the value is not empty")
 
         widget.setState({ value: 6 })
-        expect(widget.refs.NumericInput.refs.input.value).toEqual('6')
+        expect(widget.numericInput.input.value).toEqual('6')
         expect(_called).toEqual(1, "Must not call the onValid callback after transition to another valid value")
 
         done()

@@ -1,8 +1,8 @@
 /* global describe, it */
-import expect       from 'expect'
-import NumericInput from '../src/NumericInput.jsx'
-import React        from 'react'
-import TestUtils    from 'react-addons-test-utils'
+import expect         from 'expect'
+import NumericInput   from '../src/NumericInput.jsx'
+import React          from 'react'
+import ReactTestUtils from 'react-dom/test-utils';
 
 describe('NumericInput', function() {
 
@@ -15,7 +15,7 @@ describe('NumericInput', function() {
             expect(typeof event).toEqual("object")
         }
 
-        widget = TestUtils.renderIntoDocument(
+        widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onFocus={ onFocus } />
         )
 
@@ -26,16 +26,16 @@ describe('NumericInput', function() {
             window.focus()
             // Trigger a focus on the input and assert that
             // the onFocus callback receives it
-            TestUtils.Simulate.focus(widget.refs.input)
+            ReactTestUtils.Simulate.focus(widget.input)
 
             setTimeout(() => {
                 expect(onFocusCalls).toEqual(1)
 
                 // Now blur and then click on the up button. That should return
                 // the focus back to the input and call the onFocus callback again
-                TestUtils.Simulate.blur(widget.refs.input)
+                ReactTestUtils.Simulate.blur(widget.input)
                 setTimeout(() => {
-                    TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling)
+                    ReactTestUtils.Simulate.mouseDown(widget.input.nextElementSibling)
                     setTimeout(() => {
                         expect(onFocusCalls).toEqual(2)
                         done()
@@ -47,7 +47,7 @@ describe('NumericInput', function() {
 
     it('passes blur events to "onBlur" prop', (done) => {
         let onBlurCalls = 0
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onBlur={ function(event) {
                 onBlurCalls += 1
                 expect(this).toEqual(null)
@@ -61,7 +61,7 @@ describe('NumericInput', function() {
         window.focus()
 
         // Start by focusing the input
-        TestUtils.Simulate.focus(widget.refs.input)
+        ReactTestUtils.Simulate.focus(widget.input)
 
         // Test again to see if after focus the input didn't blur somehow
         setTimeout(() => {
@@ -69,17 +69,17 @@ describe('NumericInput', function() {
 
             // Trigger a blur on the input and assert that
             // the onBlur callback receives it
-            TestUtils.Simulate.blur(widget.refs.input)
+            ReactTestUtils.Simulate.blur(widget.input)
             setTimeout(() => {
                 expect(onBlurCalls).toEqual(1)
 
                 // Hit the up button. This should bring the focus back to the
                 // input
-                TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling)
+                ReactTestUtils.Simulate.mouseDown(widget.input.nextElementSibling)
                 setTimeout(() => {
 
                     // Now blur it again and see if it counts
-                    TestUtils.Simulate.blur(widget.refs.input)
+                    ReactTestUtils.Simulate.blur(widget.input)
                     setTimeout(() => {
                         expect(onBlurCalls).toEqual(2)
                         done()
@@ -93,7 +93,7 @@ describe('NumericInput', function() {
     it('respects the "autoFocus" prop', (done) => {
         let onFocusCalls = 0
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput autoFocus onFocus={ () => onFocusCalls += 1 } />
         )
 
@@ -102,7 +102,7 @@ describe('NumericInput', function() {
 
         // Rendering must bring the focus to the input
         setTimeout(() => {
-            if (document.activeElement === widget.refs.input) {
+            if (document.activeElement === widget.input) {
                 expect(onFocusCalls).toEqual(1)
                 done()
             }

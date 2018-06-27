@@ -1,14 +1,14 @@
 /* global React, describe, it */
-import expect       from 'expect'
-import NumericInput from '../src/NumericInput.jsx'
-import React        from 'react'
-import TestUtils    from 'react-addons-test-utils'
+import expect         from 'expect'
+import NumericInput   from '../src/NumericInput.jsx'
+import React          from 'react'
+import ReactTestUtils from 'react-dom/test-utils';
 
 function testProp(cfg) {
     return Promise.all(cfg.map.map(entry => {
         return new Promise(resolve => {
             let props = { [cfg.propName] : entry.in }
-            let app = TestUtils.renderIntoDocument(<NumericInput {...props} />)
+            let app = ReactTestUtils.renderIntoDocument(<NumericInput {...props} />)
             let result = cfg.getValue(app)
             expect(result).toEqual(
                 entry.out,
@@ -21,44 +21,44 @@ function testProp(cfg) {
 }
 
 function testInputProp(cfg) {
-    cfg.getValue = cfg.getValue || (widget => widget.refs.input[cfg.propName])
+    cfg.getValue = cfg.getValue || (widget => widget.input[cfg.propName])
     return testProp(cfg).then(() => {
-        let app = TestUtils.renderIntoDocument(<NumericInput />)
+        let app = ReactTestUtils.renderIntoDocument(<NumericInput />)
         let attrName = cfg.attrName || cfg.propName.toLowerCase()
         if (attrName == "pattern") {
             return new Promise(resolve => {
-                expect(app.refs.input.outerHTML.search(
+                expect(app.input.outerHTML.search(
                     new RegExp('\\bpattern="\\.\\*"')
                 )).toNotEqual(
                     -1,
                     `If the "pattern" is not set the corresponding
                     attribute should be set to ".*". The outerHTML was
-                    ${app.refs.input.outerHTML}.`
+                    ${app.input.outerHTML}.`
                 )
                 resolve()
             })
         }
         if (attrName == "value") {
             return new Promise(resolve => {
-                expect(app.refs.input.outerHTML.search(
+                expect(app.input.outerHTML.search(
                     new RegExp("\\bvalue=\"\"", "i")
                 )).toNotEqual(
                     -1,
                     `If the "value" is not set the corresponding
                     attribute should be set as "". The outerHTML was
-                    ${app.refs.input.outerHTML}.`
+                    ${app.input.outerHTML}.`
                 )
                 resolve()
             })
         }
         return new Promise(resolve => {
-            expect(app.refs.input.outerHTML.search(
+            expect(app.input.outerHTML.search(
                 new RegExp("\\b" + attrName + "=", "i")
             )).toEqual(
                 -1,
                 `If the "${cfg.propName}" is not set the corresponding
                 attribute should not be set. The outerHTML was
-                ${app.refs.input.outerHTML}.`
+                ${app.input.outerHTML}.`
             )
             resolve()
         })
@@ -189,7 +189,7 @@ describe('NumericInput', () => {
             {
                 propName: "defaultValue",
                 // attrName: "value",
-                getValue : (widget) => widget.refs.input.value,
+                getValue : (widget) => widget.input.value,
                 map: [
                     { in: ""       , out: ""    },
                     { in: "a"      , out: "0"   },
@@ -251,7 +251,7 @@ describe('NumericInput', () => {
     });
 
     it('can disable inline styles', done => {
-        let app = TestUtils.renderIntoDocument(<NumericInput style={false} />);
+        let app = ReactTestUtils.renderIntoDocument(<NumericInput style={false} />);
 
         function walk(el, visitor) {
             visitor(el);
@@ -265,13 +265,13 @@ describe('NumericInput', () => {
             }
         }
 
-        walk(app.refs.wrapper, el => {
+        walk(app.wrapper, el => {
             expect(!el.getAttribute('style')).toEqual(true);
         });
 
-        app = TestUtils.renderIntoDocument(<NumericInput style={false} mobile />);
+        app = ReactTestUtils.renderIntoDocument(<NumericInput style={false} mobile />);
 
-        walk(app.refs.wrapper, el => {
+        walk(app.wrapper, el => {
             expect(!el.getAttribute('style')).toEqual(true);
         });
 

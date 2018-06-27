@@ -1,9 +1,9 @@
 /* global describe, it */
-import expect       from 'expect'
-import NumericInput from '../src/NumericInput.jsx'
-import React        from 'react'
-import ReactDOM     from 'react-dom'
-import TestUtils    from 'react-addons-test-utils'
+import expect         from 'expect'
+import NumericInput   from '../src/NumericInput.jsx'
+import React          from 'react'
+import ReactDOM       from 'react-dom'
+import ReactTestUtils from 'react-dom/test-utils';
 
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
@@ -14,13 +14,13 @@ describe('NumericInput', function() {
     this.timeout(10000);
 
     it('works like inpit[type="number"] by default', () => {
-        var widget = TestUtils.renderIntoDocument(<NumericInput />);
-        expect(widget.refs.input.value).toEqual('');
-        expect(widget.refs.input.type).toEqual('text');
+        var widget = ReactTestUtils.renderIntoDocument(<NumericInput />);
+        expect(widget.input.value).toEqual('');
+        expect(widget.input.type).toEqual('text');
     });
 
     it('accepts all the props', () => {
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput
                     value={5}
                     min={4.9}
@@ -30,58 +30,58 @@ describe('NumericInput', function() {
                     className="form-control"
                 />
             ),
-            inputNode  = widget.refs.input;
+            inputNode  = widget.input;
 
         // Test the precision
         expect(inputNode.value).toEqual('5.00');
         expect(inputNode.className).toEqual('form-control');
 
         // Test the step
-        TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
+        ReactTestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
         expect(inputNode.value).toEqual('5.20');
 
         // Test the max
-        TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
+        ReactTestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
         expect(inputNode.value).toEqual('5.30');
 
         // Test the min
-        TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_DOWN });
+        ReactTestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_DOWN });
         expect(inputNode.value).toEqual('5.10');
-        TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_DOWN });
+        ReactTestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_DOWN });
         expect(inputNode.value).toEqual('4.90');
     });
 
     it('accepts value of 0', () => {
-        var widget = TestUtils.renderIntoDocument(<NumericInput value={0}/>),
-            inputNode = widget.refs.input;
+        var widget = ReactTestUtils.renderIntoDocument(<NumericInput value={0}/>),
+            inputNode = widget.input;
         expect(inputNode.value).toEqual('0');
     });
 
     it('accepts value of "0"', () => {
-        var widget = TestUtils.renderIntoDocument(<NumericInput value="0"/>),
-            inputNode = widget.refs.input;
+        var widget = ReactTestUtils.renderIntoDocument(<NumericInput value="0"/>),
+            inputNode = widget.input;
         expect(inputNode.value).toEqual('0');
     });
 
     it('accepts value of ""', () => {
-        var widget = TestUtils.renderIntoDocument(<NumericInput value=""/>),
-            inputNode = widget.refs.input;
+        var widget = ReactTestUtils.renderIntoDocument(<NumericInput value=""/>),
+            inputNode = widget.input;
         expect(inputNode.value).toEqual('');
     });
 
     it('can auto-increase', (done) => {
         this.timeout
-        var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
+        var widget     = ReactTestUtils.renderIntoDocument(<NumericInput/>),
             widgetNode = ReactDOM.findDOMNode(widget),
             inputNode  = widgetNode.firstChild,
             btnUp      = inputNode.nextElementSibling;
 
-        TestUtils.Simulate.mouseDown(btnUp);
+        ReactTestUtils.Simulate.mouseDown(btnUp);
         expect(inputNode.value).toEqual('1');
 
         setTimeout(() => {
             expect(inputNode.value).toEqual('2');
-            TestUtils.Simulate.mouseUp(btnUp);
+            ReactTestUtils.Simulate.mouseUp(btnUp);
             setTimeout(() => {
                 expect(inputNode.value).toEqual('2');
                 done();
@@ -90,17 +90,17 @@ describe('NumericInput', function() {
     });
 
     it('can auto-decrease', (done) => {
-        var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
+        var widget     = ReactTestUtils.renderIntoDocument(<NumericInput/>),
             widgetNode = ReactDOM.findDOMNode(widget),
             inputNode  = widgetNode.firstChild,
             btnDown    = widgetNode.lastChild;
 
-        TestUtils.Simulate.mouseDown(btnDown);
+        ReactTestUtils.Simulate.mouseDown(btnDown);
         expect(inputNode.value).toEqual('-1');
 
         setTimeout(() => {
             expect(inputNode.value).toEqual('-2');
-            TestUtils.Simulate.mouseUp(btnDown);
+            ReactTestUtils.Simulate.mouseUp(btnDown);
             setTimeout(() => {
                 expect(inputNode.value).toEqual('-2');
                 done();
@@ -109,18 +109,18 @@ describe('NumericInput', function() {
     });
 
     it('will stop increasing on mouseleave', (done) => {
-        var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
+        var widget     = ReactTestUtils.renderIntoDocument(<NumericInput/>),
             widgetNode = ReactDOM.findDOMNode(widget),
             inputNode  = widgetNode.firstChild,
             btnUp      = inputNode.nextElementSibling;
 
-        TestUtils.Simulate.mouseDown(btnUp);
+        ReactTestUtils.Simulate.mouseDown(btnUp);
         expect(inputNode.value).toEqual('1');
 
         setTimeout(() => {
             expect(inputNode.value).toEqual('2');
-            // TestUtils.Simulate.mouseLeave(widgetNode);
-            TestUtils.Simulate.mouseLeave(btnUp);
+            // ReactTestUtils.Simulate.mouseLeave(widgetNode);
+            ReactTestUtils.Simulate.mouseLeave(btnUp);
             setTimeout(() => {
                 expect(inputNode.value).toEqual('2');
                 done();
@@ -129,18 +129,18 @@ describe('NumericInput', function() {
     });
 
     it('will stop decreasing on mouseleave', (done) => {
-        var widget     = TestUtils.renderIntoDocument(<NumericInput/>),
+        var widget     = ReactTestUtils.renderIntoDocument(<NumericInput/>),
             widgetNode = ReactDOM.findDOMNode(widget),
             inputNode  = widgetNode.firstChild,
             btnDown    = widgetNode.lastChild;
 
-        TestUtils.Simulate.mouseDown(btnDown);
+        ReactTestUtils.Simulate.mouseDown(btnDown);
         expect(inputNode.value).toEqual('-1');
 
         setTimeout(() => {
             expect(inputNode.value).toEqual('-2');
-            // TestUtils.Simulate.mouseLeave(widgetNode);
-            TestUtils.Simulate.mouseLeave(btnDown);
+            // ReactTestUtils.Simulate.mouseLeave(widgetNode);
+            ReactTestUtils.Simulate.mouseLeave(btnDown);
             setTimeout(() => {
                 expect(inputNode.value).toEqual('-2');
                 done();
@@ -157,7 +157,7 @@ describe('NumericInput', function() {
             return parseFloat(s.replace(/That\swas\s(\d+)\sdays\sago/gi, '$1'));
         }
 
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput
                     value={5}
                     step={2}
@@ -169,16 +169,16 @@ describe('NumericInput', function() {
             inputNode  = widgetNode.firstChild;
 
         expect(inputNode.value).toEqual('That was 5 days ago');
-        TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_DOWN });
+        ReactTestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_DOWN });
         expect(inputNode.value).toEqual('That was 3 days ago');
         inputNode.value = 'That was 13 days ago';
-        TestUtils.Simulate.change(inputNode);
-        TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
+        ReactTestUtils.Simulate.change(inputNode);
+        ReactTestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
         expect(inputNode.value).toEqual('That was 15 days ago');
     });
 
     it('uses the "disabled" prop to disable the UI', () => {
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput disabled readOnly/>
             ),
             widgetNode = ReactDOM.findDOMNode(widget),
@@ -189,21 +189,21 @@ describe('NumericInput', function() {
         expect(inputNode.readOnly).toEqual(true);
         // expect(widgetNode.className).toMatch(/\bdisabled\b/);
         // expect(widgetNode.className).toMatch(/\breadonly\b/);
-        TestUtils.Simulate.mouseDown(btnUp);
+        ReactTestUtils.Simulate.mouseDown(btnUp);
         expect(inputNode.value).toEqual('');
     });
 
     // setValue() and getValueAsNumber() ---------------------------------------
     it('exposes setValue() and getValueAsNumber() on the input', () => {
-        var widget = TestUtils.renderIntoDocument(<NumericInput />);
-        expect(widget.refs.input.getValueAsNumber()).toEqual(0);
-        widget.refs.input.setValue(123.56);
-        expect(widget.refs.input.getValueAsNumber()).toEqual(123.56);
+        var widget = ReactTestUtils.renderIntoDocument(<NumericInput />);
+        expect(widget.input.getValueAsNumber()).toEqual(0);
+        widget.input.setValue(123.56);
+        expect(widget.input.getValueAsNumber()).toEqual(123.56);
     });
 
     // Testing styles ----------------------------------------------------------
     it('can set wrapper styles', () => {
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput style={{
                     wrap: {
                         fontStyle: 'italic'
@@ -216,7 +216,7 @@ describe('NumericInput', function() {
     });
 
     it('can set input styles', () => {
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput style={{
                     input: {
                         fontStyle: 'italic'
@@ -230,7 +230,7 @@ describe('NumericInput', function() {
     });
 
     it('can set btnUp styles', () => {
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput style={{
                     btnUp: {
                         fontStyle: 'italic'
@@ -244,7 +244,7 @@ describe('NumericInput', function() {
     });
 
     it('can set btnDown styles', () => {
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput style={{
                     btnDown: {
                         fontStyle: 'italic'
@@ -258,7 +258,7 @@ describe('NumericInput', function() {
     });
 
     it('can set arrowDown styles', () => {
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput style={{
                     arrowDown: {
                         fontStyle: 'italic'
@@ -272,7 +272,7 @@ describe('NumericInput', function() {
     });
 
     it('can set arrowUp styles', () => {
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput style={{
                     arrowUp: {
                         fontStyle: 'italic'
@@ -287,7 +287,7 @@ describe('NumericInput', function() {
 
     it('can set btn:state styles', () => {
         var disabled = false;
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput disabled={disabled} style={{
                     'btn'         : { color: 'rgb(1, 2, 3)' },
                     'btn:hover'   : { color: 'rgb(2, 3, 4)' },
@@ -304,19 +304,19 @@ describe('NumericInput', function() {
         expect(btnDownNode.style.color).toEqual('rgb(1, 2, 3)');
 
         // :hover
-        TestUtils.Simulate.mouseEnter(btnUpNode);
+        ReactTestUtils.Simulate.mouseEnter(btnUpNode);
         expect(btnUpNode.style.color).toEqual('rgb(2, 3, 4)');
-        TestUtils.Simulate.mouseEnter(btnDownNode);
+        ReactTestUtils.Simulate.mouseEnter(btnDownNode);
         expect(btnDownNode.style.color).toEqual('rgb(2, 3, 4)');
 
         // :active
-        TestUtils.Simulate.mouseDown(btnUpNode);
+        ReactTestUtils.Simulate.mouseDown(btnUpNode);
         expect(btnUpNode.style.color).toEqual('rgb(3, 4, 5)');
-        TestUtils.Simulate.mouseDown(btnDownNode);
+        ReactTestUtils.Simulate.mouseDown(btnDownNode);
         expect(btnDownNode.style.color).toEqual('rgb(3, 4, 5)');
 
         // :disabled
-        widget = TestUtils.renderIntoDocument(
+        widget = ReactTestUtils.renderIntoDocument(
             <NumericInput disabled style={{
                 'btn'         : { color: 'rgb(1, 2, 3)'},
                 'btn:hover'   : { color: 'rgb(2, 3, 4)'},
@@ -330,18 +330,18 @@ describe('NumericInput', function() {
 
         expect(btnUpNode.style.color).toEqual('rgb(4, 5, 6)');
         expect(btnDownNode.style.color).toEqual('rgb(4, 5, 6)');
-        TestUtils.Simulate.mouseEnter(btnUpNode);
+        ReactTestUtils.Simulate.mouseEnter(btnUpNode);
         expect(btnUpNode.style.color).toEqual('rgb(4, 5, 6)');
-        TestUtils.Simulate.mouseEnter(btnDownNode);
+        ReactTestUtils.Simulate.mouseEnter(btnDownNode);
         expect(btnDownNode.style.color).toEqual('rgb(4, 5, 6)');
-        TestUtils.Simulate.mouseDown(btnUpNode);
+        ReactTestUtils.Simulate.mouseDown(btnUpNode);
         expect(btnUpNode.style.color).toEqual('rgb(4, 5, 6)');
-        TestUtils.Simulate.mouseDown(btnDownNode);
+        ReactTestUtils.Simulate.mouseDown(btnDownNode);
         expect(btnDownNode.style.color).toEqual('rgb(4, 5, 6)');
     });
 
     it ('can set mobile styles', () => {
-        var widget = TestUtils.renderIntoDocument(<NumericInput mobile/>),
+        var widget = ReactTestUtils.renderIntoDocument(<NumericInput mobile/>),
             widgetNode  = ReactDOM.findDOMNode(widget),
             btnUpNode   = widgetNode.firstChild.nextElementSibling,
             btnDownNode = widgetNode.lastChild;
@@ -349,7 +349,7 @@ describe('NumericInput', function() {
         expect(btnUpNode.style.bottom).toEqual('2px');
         expect(btnDownNode.style.left).toEqual('2px');
 
-        widget = TestUtils.renderIntoDocument(<NumericInput mobile={false}/>),
+        widget = ReactTestUtils.renderIntoDocument(<NumericInput mobile={false}/>),
             widgetNode  = ReactDOM.findDOMNode(widget),
             btnUpNode   = widgetNode.firstChild.nextElementSibling,
             btnDownNode = widgetNode.lastChild;
@@ -367,16 +367,16 @@ describe('NumericInput', function() {
         function format(val) {
             return val * 100 + 'x';
         }
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput value={0} onChange={onChange} format={format} />
             ),
             widgetNode = ReactDOM.findDOMNode(widget),
             btnUpNode  = widgetNode.firstChild.nextElementSibling,
-            inputNode  = widget.refs.input;
+            inputNode  = widget.input;
 
         expect(inputNode.value).toEqual('0x');
         expect(value).toEqual(null);
-        TestUtils.Simulate.mouseDown(btnUpNode);
+        ReactTestUtils.Simulate.mouseDown(btnUpNode);
         expect(inputNode.value).toEqual('100x');
         expect(stringValue).toEqual('100x');
         expect(value).toEqual(1);
@@ -390,15 +390,15 @@ describe('NumericInput', function() {
         function onBlur() {
             hasFocus = false;
         }
-        var widget = TestUtils.renderIntoDocument(
+        var widget = ReactTestUtils.renderIntoDocument(
                 <NumericInput onFocus={onFocus} onBlur={onBlur} />
             ),
-            inputNode = widget.refs.input;
+            inputNode = widget.input;
 
         expect(hasFocus).toEqual(null);
-        TestUtils.Simulate.focus(inputNode);
+        ReactTestUtils.Simulate.focus(inputNode);
         expect(hasFocus).toEqual(true);
-        TestUtils.Simulate.blur(inputNode);
+        ReactTestUtils.Simulate.blur(inputNode);
         expect(hasFocus).toEqual(false);
     });
 
@@ -411,20 +411,20 @@ describe('NumericInput', function() {
             }
             hits++;
         }
-        widget = TestUtils.renderIntoDocument(
+        widget = ReactTestUtils.renderIntoDocument(
             <NumericInput value={0} onKeyDown={onKeyDown} />
         );
-        inputNode = widget.refs.input;
+        inputNode = widget.input;
 
         expect(hits).toEqual(0);
         expect(inputNode.value).toEqual('0');
 
-        TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
+        ReactTestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
 
         expect(hits).toEqual(1);
         expect(inputNode.value).toEqual('1');
 
-        TestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
+        ReactTestUtils.Simulate.keyDown(inputNode, { keyCode: KEYCODE_UP });
 
         expect(hits).toEqual(2);
         expect(inputNode.value).toEqual('1');
