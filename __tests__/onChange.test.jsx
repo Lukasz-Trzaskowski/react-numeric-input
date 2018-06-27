@@ -1,8 +1,8 @@
 /* global describe, it */
-import expect       from 'expect'
-import NumericInput from '../src/NumericInput.jsx'
-import React        from 'react'
-import TestUtils    from 'react-addons-test-utils'
+import expect         from 'expect'
+import NumericInput   from '../src/NumericInput.jsx'
+import React          from 'react'
+import ReactTestUtils from 'react-dom/test-utils';
 
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
@@ -18,13 +18,13 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } />
         )
 
         // Press "5"
-        widget.refs.input.value = "5"
-        TestUtils.Simulate.change(widget.refs.input)
+        widget.input.value = "5"
+        ReactTestUtils.Simulate.change(widget.input)
 
         // Rendering must bring the focus to the input
         setTimeout(() => {
@@ -43,12 +43,12 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } />
         )
 
         // Press "r"
-        TestUtils.Simulate.keyDown(widget.refs.input, { keyCode: 114 })
+        ReactTestUtils.Simulate.keyDown(widget.input, { keyCode: 114 })
 
         setTimeout(() => {
             expect(onChangeCalls).toEqual(0)
@@ -66,11 +66,11 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, { keyCode: KEYCODE_UP })
+        ReactTestUtils.Simulate.keyDown(widget.input, { keyCode: KEYCODE_UP })
 
         setTimeout(() => {
             expect(onChangeCalls).toEqual(1)
@@ -88,11 +88,11 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        ReactTestUtils.Simulate.keyDown(widget.input, {
             keyCode: KEYCODE_UP,
             ctrlKey: true
         })
@@ -113,11 +113,11 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        ReactTestUtils.Simulate.keyDown(widget.input, {
             keyCode: KEYCODE_UP,
             metaKey: true
         })
@@ -138,11 +138,11 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        ReactTestUtils.Simulate.keyDown(widget.input, {
             keyCode : KEYCODE_UP,
             shiftKey: true
         })
@@ -163,11 +163,11 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, { keyCode: KEYCODE_DOWN })
+        ReactTestUtils.Simulate.keyDown(widget.input, { keyCode: KEYCODE_DOWN })
 
         setTimeout(() => {
             expect(onChangeCalls).toEqual(1)
@@ -185,11 +185,11 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        ReactTestUtils.Simulate.keyDown(widget.input, {
             keyCode: KEYCODE_DOWN,
             ctrlKey: true
         })
@@ -210,11 +210,11 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        ReactTestUtils.Simulate.keyDown(widget.input, {
             keyCode: KEYCODE_DOWN,
             metaKey: true
         })
@@ -235,11 +235,11 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } precision={2} />
         )
 
-        TestUtils.Simulate.keyDown(widget.refs.input, {
+        ReactTestUtils.Simulate.keyDown(widget.input, {
             keyCode : KEYCODE_DOWN,
             shiftKey: true
         })
@@ -260,12 +260,12 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } />
         )
 
         // Press "5"
-        TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling)
+        ReactTestUtils.Simulate.mouseDown(widget.input.nextElementSibling)
 
         // Rendering must bring the focus to the input
         setTimeout(() => {
@@ -284,12 +284,12 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } />
         )
 
         // Press "5"
-        TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling.nextElementSibling)
+        ReactTestUtils.Simulate.mouseDown(widget.input.nextElementSibling.nextElementSibling)
 
         // Rendering must bring the focus to the input
         setTimeout(() => {
@@ -308,11 +308,11 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } />
         )
 
-        TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling)
+        ReactTestUtils.Simulate.mouseDown(widget.input.nextElementSibling)
 
         setTimeout(() => {
             expect(onChangeCalls).toEqual(2)
@@ -330,11 +330,11 @@ describe('NumericInput', function() {
             lastChange = x
         }
 
-        let widget = TestUtils.renderIntoDocument(
+        let widget = ReactTestUtils.renderIntoDocument(
             <NumericInput onChange={ onChange } />
         )
 
-        TestUtils.Simulate.mouseDown(widget.refs.input.nextElementSibling.nextElementSibling)
+        ReactTestUtils.Simulate.mouseDown(widget.input.nextElementSibling.nextElementSibling)
 
         setTimeout(() => {
             expect(onChangeCalls).toEqual(2)

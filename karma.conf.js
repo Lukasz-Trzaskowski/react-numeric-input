@@ -1,22 +1,10 @@
 /* global process */
 module.exports = function (config) {
     config.set({
-        browsers: process.env.CONTINUOUS_INTEGRATION ?
-            [ 'Firefox' ] :
-            [
-                'PhantomJS',
-                'Chrome',
-                'ChromeCanary',
-                'Firefox',
-                'Opera',
-                'Safari'
-            ],
+        browsers: [ 'Chrome' ],
         singleRun: true,
         frameworks: [ 'mocha' ],
         files: [
-
-            // This one is needed for testing in PhantomJS
-            'https://raw.githubusercontent.com/es-shims/es5-shim/master/es5-shim.js',
             './__tests__/tests.webpack.js'
         ],
         preprocessors: {

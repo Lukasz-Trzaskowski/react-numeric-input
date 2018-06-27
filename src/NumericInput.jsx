@@ -1,6 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-const PropTypes    = React.PropTypes
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
 const IS_BROWSER   = typeof document != 'undefined';
@@ -290,6 +290,10 @@ class NumericInput extends React.Component
         }
 
         this.stop = this.stop.bind(this);
+        this.wrapper = null;
+        this.setWrapperRef = element => this.wrapper = element;
+        this.input = null;
+        this.setInputRef = element => this.input = element;
     }
 
     /**
@@ -324,27 +328,27 @@ class NumericInput extends React.Component
         // many reasons for changing the value and this is the common place
         // that can capture them all
         if (prevState.value != this.state.value) {
-            this._invokeEventCallback("onChange", this.state.value, this.refs.input.value)
+            this._invokeEventCallback("onChange", this.state.value, this.input.value)
         }
 
         // Notify about the focus
         if (this.state.inputFocus && !prevState.inputFocus) {
-            this.refs.input.focus()
+            this.input.focus()
 
             // Restore selectionStart (if any)
             if (this.state.selectionStart || this.state.selectionStart === 0) {
-                this.refs.input.selectionStart = this.state.selectionStart
+                this.input.selectionStart = this.state.selectionStart
             }
 
             // Restore selectionEnd (if any)
             if (this.state.selectionEnd || this.state.selectionEnd === 0) {
-                this.refs.input.selectionEnd = this.state.selectionEnd
+                this.input.selectionEnd = this.state.selectionEnd
             }
         }
 
         // This is a special case! If the component has the "autoFocus" prop
         // and the browser did focus it we have pass that to the onFocus
-        if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refs.input) {
+        if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.input) {
             this.state.inputFocus = true
         }
 
@@ -354,7 +358,7 @@ class NumericInput extends React.Component
     /**
      * This is used to clear the timer if any
      */
-    componentWillUnmount(): void
+    componentWillUnmount()
     {
         this.stop();
     }
@@ -362,11 +366,11 @@ class NumericInput extends React.Component
     /**
      * Adds getValueAsNumber and setValue methods to the input DOM element.
      */
-    componentDidMount(): void
+    componentDidMount()
     {
-        this.refs.input.getValueAsNumber = () => this.state.value || 0
+        this.input.getValueAsNumber = () => this.state.value || 0
 
-        this.refs.input.setValue = (value) => {
+        this.input.setValue = (value) => {
             this.setState({
                 value: this._parse(value)
             })
@@ -383,14 +387,14 @@ class NumericInput extends React.Component
     checkValidity() {
         let valid, validationError = ""
 
-        let supportsValidation = !!this.refs.input.checkValidity
+        let supportsValidation = !!this.input.checkValidity
 
         // noValidate
         let noValidate = !!(
             this.props.noValidate && this.props.noValidate != "false"
         )
 
-        this.refs.input.noValidate = noValidate
+        this.input.noValidate = noValidate
 
         // If "noValidate" is set or "checkValidity" is not supported then
         // consider the element valid. Otherwise consider it invalid and
@@ -405,52 +409,52 @@ class NumericInput extends React.Component
             // In some browsers once a pattern is set it connot be removed. The
             // browser sets it to "" instead which results in validation
             // failures...
-            if (this.refs.input.pattern === "") {
-                this.refs.input.pattern = this.props.required ? ".+" : ".*"
+            if (this.input.pattern === "") {
+                this.input.pattern = this.props.required ? ".+" : ".*"
             }
 
             // Now check validity
             if (supportsValidation) {
-                this.refs.input.checkValidity()
-                valid = this.refs.input.validity.valid
+                this.input.checkValidity()
+                valid = this.input.validity.valid
 
                 if (!valid) {
-                    validationError = this.refs.input.validationMessage
+                    validationError = this.input.validationMessage
                 }
             }
 
             // Some brousers might fail to validate maxLength
             if (valid && supportsValidation && this.props.maxLength) {
-                if (this.refs.input.value.length > this.props.maxLength) {
+                if (this.input.value.length > this.props.maxLength) {
                     validationError = "This value is too long"
                 }
             }
         }
 
         validationError = validationError || (
-            valid ? "" : this.refs.input.validationMessage || "Unknown Error"
+            valid ? "" : this.input.validationMessage || "Unknown Error"
         )
 
         let validStateChanged = this._valid !== validationError
         this._valid = validationError
         if (validationError) {
-            addClass(this.refs.wrapper, "has-error")
+            addClass(this.wrapper, "has-error")
             if (validStateChanged) {
                 this._invokeEventCallback(
                     "onInvalid",
                     validationError,
                     this.state.value,
-                    this.refs.input.value
+                    this.input.value
                 )
             }
         }
         else {
-            removeClass(this.refs.wrapper, "has-error")
+            removeClass(this.wrapper, "has-error")
             if (validStateChanged) {
                 this._invokeEventCallback(
                     "onValid",
                     this.state.value,
-                    this.refs.input.value
+                    this.input.value
                 )
             }
         }
@@ -463,7 +467,7 @@ class NumericInput extends React.Component
      * precision (no fixed precision here because the return value is float, not
      * string).
      */
-    _toNumber(x: any): number
+    _toNumber(x)
     {
         let n = parseFloat(x);
         let q = Math.pow(10, this.props.precision);
@@ -483,7 +487,7 @@ class NumericInput extends React.Component
      * will just use parseFloat.
      * @private
      */
-    _parse(x: string): number
+    _parse(x)
     {
         if (typeof this.props.parse == 'function') {
             return parseFloat(this.props.parse(x));
@@ -496,7 +500,7 @@ class NumericInput extends React.Component
      * It will invoke the this.props.format function if one is provided.
      * @private
      */
-    _format(n: number): string
+    _format(n)
     {
         let _n = this._toNumber(n).toFixed(this.props.precision);
 
@@ -511,7 +515,7 @@ class NumericInput extends React.Component
      * The internal method that actualy sets the new value on the input
      * @private
      */
-    _step(n: number, callback): boolean
+    _step(n, callback)
     {
         let _n = this._toNumber(
             (this.state.value || 0) + this.props.step * n
@@ -527,7 +531,7 @@ class NumericInput extends React.Component
      * be recreated using the current parse/format methods so the input will
      * appear as readonly if the user tries to type something invalid.
      */
-    _onChange(e: Event): void
+    _onChange(e)
     {
         this.setState({
             value: this._parse(e.target.value)
@@ -537,7 +541,7 @@ class NumericInput extends React.Component
     /**
      * This binds the Up/Down arrow key listeners
      */
-    _onKeyDown(...args): void
+    _onKeyDown(...args)
     {
         args[0].persist()
         this._invokeEventCallback("onKeyDown", ...args)
@@ -554,27 +558,27 @@ class NumericInput extends React.Component
         }
     }
 
-    _onSelectionChange(e): void
+    _onSelectionChange(e)
     {
         e.persist()
         this.setState({
-            selectionStart: this.refs.input.selectionStart,
-            selectionEnd: this.refs.input.selectionEnd
+            selectionStart: this.input.selectionStart,
+            selectionEnd: this.input.selectionEnd
         }, () => {
             switch (e.type) {
             case "input":
                 if (this.props.onInput) {
-                    this.props.onInput.call(this.refs.input, e)
+                    this.props.onInput.call(this.input, e)
                 }
                 break;
             case "select":
                 if (this.props.onSelect) {
-                    this.props.onSelect.call(this.refs.input, e)
+                    this.props.onSelect.call(this.input, e)
                 }
                 break;
             // case "selectstart":
             //     if (this.props.onSelectStart) {
-            //         this.props.onSelectStart.call(this.refs.input, e)
+            //         this.props.onSelectStart.call(this.input, e)
             //     }
             //     break;
             }
@@ -584,7 +588,7 @@ class NumericInput extends React.Component
     /**
      * Stops the widget from auto-changing by clearing the timer (if any)
      */
-    stop(): void
+    stop()
     {
         if ( this._timer ) {
             clearTimeout( this._timer );
@@ -599,7 +603,7 @@ class NumericInput extends React.Component
      *  it is in recursive mode.
      * @return void
      */
-    increase(_recursive: boolean, callback): void
+    increase(_recursive, callback)
     {
         this.stop();
         this._step(1, callback);
@@ -618,7 +622,7 @@ class NumericInput extends React.Component
      *  it is in recursive mode.
      * @return void
      */
-    decrease(_recursive: boolean, callback): void
+    decrease(_recursive, callback)
     {
         this.stop();
         this._step(-1, callback);
@@ -713,10 +717,10 @@ class NumericInput extends React.Component
             wrap : {
                 style    : style === false ? null : css.wrap,
                 className: 'react-numeric-input',
-                ref      : 'wrapper'
+                ref      : inst => this.wrapper = inst
             },
             input : {
-                ref: 'input',
+                ref: inst => this.input = inst,
                 type: 'text',
                 style: style === false ? null : Object.assign(
                     {},
